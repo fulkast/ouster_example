@@ -9,11 +9,14 @@ project(ouster_ros)
 # ==== Requirements ====
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common)
+find_package(OpenCV REQUIRED)
 find_package(tf2_eigen REQUIRED)
 
 find_package(
   catkin REQUIRED
-  COMPONENTS message_generation
+  COMPONENTS
+             cv_bridge
+             message_generation
              std_msgs
              sensor_msgs
              geometry_msgs
@@ -83,6 +86,10 @@ add_dependencies(os_cloud_node ${PROJECT_NAME}_gencpp)
 add_executable(img_node src/img_node.cpp)
 target_link_libraries(img_node ouster_ros ${catkin_LIBRARIES})
 add_dependencies(img_node ${PROJECT_NAME}_gencpp)
+
+add_executable(serialise_to_files src/serialise_to_files.cpp)
+target_link_libraries(serialise_to_files ouster_ros ${catkin_LIBRARIES} ${OpenCV_LIBS})
+add_dependencies(serialise_to_files ${PROJECT_NAME}_gencpp ${OpenCV_LIBS})
 
 # ==== Install ====
 install(
